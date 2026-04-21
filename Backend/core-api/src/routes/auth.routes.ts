@@ -1,21 +1,18 @@
-import { Router } from "express";
+import { Router } from "express"
+import { jwtAuthMiddleware } from "../middlewares/jwt.middleware.js"
 import {
-  registerUser,
-  loginUser,
-  refreshAccessToken,
-  changePassword,
-  logoutUser
-} from "../controllers/auth.controller.js";
-import { jwtAuthMiddleware } from "../middlewares/jwt.middleware.js";
-
-const router = Router();
+    registerUser,
+    loginUser,
+    refreshAccessToken,
+    logoutUser,
+    changePassword
+} from "../controllers/auth.controller.js"
 
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.post("/refresh-token", refreshAccessToken);
+export const authRouter = Router()
 
-router.post("/change-password", jwtAuthMiddleware, changePassword);
-router.post("/logout", jwtAuthMiddleware, logoutUser);
-
-export default router;
+authRouter.post('/signup', registerUser)
+authRouter.post('/login', loginUser)
+authRouter.post('/refresh-token', refreshAccessToken)
+authRouter.post('/logout',jwtAuthMiddleware, logoutUser)
+authRouter.post('/change-password',jwtAuthMiddleware, changePassword)

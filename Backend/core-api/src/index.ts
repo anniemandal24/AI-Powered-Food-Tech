@@ -1,5 +1,6 @@
 import { app } from "./app.js";
 import { connectDB } from "./db/index.js";
+import { authRouter } from "./routes/auth.routes.js";
 
 const port = process.env.PORT as string
 
@@ -16,6 +17,8 @@ connectDB().then(()=>{
     console.log(`Error for connectDB execution, Error:${err}`)
 })
 
-app.get('/healthcheck',(req,res)=>{
+app.get('/health-check',(req,res)=>{
     res.send(`core-api server is running`)
 })
+
+app.use("/api/v1/auth", authRouter)
