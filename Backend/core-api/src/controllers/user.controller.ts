@@ -5,6 +5,7 @@ import { item } from "../models/item.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
+
 export const addFamilyMembers = asyncHandler(async (req:Request, res:Response)=>{
     const {name, ageGroup, gender} = req.body
     const {id} = req.params
@@ -20,8 +21,8 @@ export const addFamilyMembers = asyncHandler(async (req:Request, res:Response)=>
         ageGroup:ageGroup,
         gender:gender,
 
-        dietaryPractices: req.body || null,
-        healthStatus: req.body || null 
+        dietaryPractices: req.body.dietaryPractices || [],
+        healthStatus: req.body.healthStatus || []
     }
 
     const addMember = await user.findByIdAndUpdate(id,{

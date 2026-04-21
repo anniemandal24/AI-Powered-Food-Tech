@@ -24,10 +24,10 @@ export const registerUser = asyncHandler(async (req:Request, res:Response)=>{
     }
 
     const newUser = new user({
-        fullname:name as string,
-        password:password as string,
-        email:email as string
-    })
+        name: name,
+        email: email,
+        passwordHash: password   // or hashed version
+    });
 
     const saveuser = await newUser.save()
     const createdUser:any = await user.findById(saveuser._id).select(

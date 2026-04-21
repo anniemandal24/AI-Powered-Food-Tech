@@ -64,15 +64,15 @@ const userSchema = new Schema<IUser>({
 },{timestamps:true});
 
 
-userSchema.methods.comparePassword = async function comparePassword(pass:string){
-    return await bcrypt.compare(pass,this.password)
+userSchema.methods.comparePassword = async function (pass: string) {
+    return await bcrypt.compare(pass, this.passwordHash);
 }
 
-userSchema.pre('save',async function hashPassword(next) {
-    if(!this.isModified("password")) return;
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("passwordHash")) return;
 
-    this.passwordHash = await bcrypt.hash(this.passwordHash as string,10)
-})
+    this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
+});
 
 userSchema.methods.generateAccessToken = function () {
     const payload = {

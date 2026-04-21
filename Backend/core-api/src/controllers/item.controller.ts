@@ -31,7 +31,7 @@ export const getItembyStatus=asyncHandler(async(req,res)=>{
         throw new ApiError(404,"status must be available,consumed or wasted")
     }
     const items=await item.find({user:req.user._id,status:statustr.toUpperCase()})
-    res.status(200).json(new ApiResponse(200,items,"${status} items fetched successfully"))
+    res.status(200).json(new ApiResponse(200,items,'${status} items fetched successfully'))
 })
 export const getItemById=asyncHandler(async(req,res)=>{
     const id=req.params.id as string
