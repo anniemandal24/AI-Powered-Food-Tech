@@ -1,7 +1,5 @@
 from openai import OpenAI
-from dotenv import load_dotenv
 import os
-load_dotenv()
 
 client = OpenAI(
     api_key = os.getenv("GEMINI_API_KEY"),
@@ -31,7 +29,7 @@ SYSTEM_PROMPT = """
 """
 
 
-def get_file_data(url:str):
+def get_image_data(url:str):
     response = client.chat.completions.create(
         model="gemini-3-flash-preview",
         messages=[

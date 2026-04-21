@@ -64,12 +64,12 @@ const userSchema = new Schema<IUser>({
 },{timestamps:true});
 
 
-userSchema.methods.comparePassword = async function (pass: string) {
-    return await bcrypt.compare(pass, this.passwordHash);
+userSchema.methods.comparePassword = async function comparePassword(pass:string){
+    return await bcrypt.compare(pass,this.passwordHash)
 }
 
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("passwordHash")) return;
+userSchema.pre('save',async function hashPassword(){
+    if(!this.isModified("passwordHash")) return;
 
     this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
 });
@@ -88,7 +88,7 @@ userSchema.methods.generateAccessToken = function () {
 
     return jwt.sign(
         payload,
-        process.env.ACCESS_TOKEN_SECRET_KEY as Secret,
+        process.env.JWT_SECRET_KEY as Secret,
         options
     )
 }
@@ -108,7 +108,7 @@ userSchema.methods.generateRefreshToken = function () {
 
     return jwt.sign(
         payload,
-        process.env.REFRESH_TOKEN_SECRET_KEY as Secret,
+        process.env.JWT_SECRET_KEY as Secret,
         options 
     )
 }

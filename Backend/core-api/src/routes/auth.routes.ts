@@ -16,3 +16,6 @@ authRouter.post('/login', loginUser)
 authRouter.post('/refresh-token', refreshAccessToken)
 authRouter.post('/logout',jwtAuthMiddleware, logoutUser)
 authRouter.post('/change-password',jwtAuthMiddleware, changePassword)
+
+
+
