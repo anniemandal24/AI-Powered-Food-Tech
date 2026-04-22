@@ -71,8 +71,8 @@ userSchema.methods.comparePassword = async function comparePassword(pass:string)
 userSchema.pre('save',async function hashPassword(){
     if(!this.isModified("passwordHash")) return;
 
-    this.passwordHash = await bcrypt.hash(this.passwordHash as string,10)
-})
+    this.passwordHash = await bcrypt.hash(this.passwordHash, 10);
+});
 
 userSchema.methods.generateAccessToken = function () {
     const payload = {
