@@ -28,14 +28,14 @@ async def save_chat_to_db(conversation_id:str,user_message:str,ai_result):
     conv_obj_id = ObjectId(conversation_id)
 
     user_msg_val = MessageSchema(
-        conversation_id = conv_obj_id, 
+        conversation_id = str(conversation_id), 
         sender = "user", 
         content = user_message,
         created_at = datetime.now(timezone.utc)
     )
     
     ai_msg_val = MessageSchema(
-        conversation_id = conv_obj_id, 
+        conversation_id = str(conversation_id), 
         sender = "ai", 
         content = ai_result,
         created_at = datetime.now(timezone.utc)
@@ -60,7 +60,7 @@ async def save_chat_to_db(conversation_id:str,user_message:str,ai_result):
 
 
 async def get_chat_history(conversation_id:Any|ObjectId):
-    cursor = await messages_collection.find({
+    cursor = messages_collection.find({
         "conversation_id": conversation_id
     }).sort("created_at", -1).limit(6)
 

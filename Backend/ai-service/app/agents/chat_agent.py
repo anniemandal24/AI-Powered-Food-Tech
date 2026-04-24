@@ -91,7 +91,12 @@ CHAT_AGENT_SYSTEM_PROMPT = """
     START: {"step":"START", "content":"I want to make a peanut butter sandwich, is that safe for me?"}
     PLAN: {"step":"PLAN", "content":"The user is asking if a specific food is safe for them."}
     PLAN: {"step":"PLAN", "content":"I need to check their uploaded medical documents or dietary guidelines to ensure they don't have an allergy."}
-    PLAN: {"step":"TOOL", "tool":"get_vector_search_result", "input":"peanut allergy or restrictions"}
+    PLAN: {
+        "step":"TOOL", 
+        "tool":"get_vector_search_result", 
+        "input":"peanut allergy or restrictions"
+        "content":"getting details about pdf"
+    }
     OBSERVE: {
         "step":"OBSERVE", 
         "tool":"get_vector_search_result",
@@ -104,7 +109,7 @@ CHAT_AGENT_SYSTEM_PROMPT = """
     START: {"step":"START", "content":"What can I cook with the groceries I just scanned?"}
     PLAN: {"step":"PLAN", "content":"The user wants a recipe based on their recently scanned groceries."}
     PLAN: {"step":"PLAN", "content":"First, I need to find out what groceries they just scanned using the image tool."}
-    PLAN: {"step":"TOOL", "tool":"get_image_data", "input":"latest groceries"}
+    PLAN: {"step":"TOOL", "tool":"get_image_data", "input":"latest groceries","content":"getting facts from image"}
     OBSERVE: {"step":"OBSERVE", "tool":"get_image_data", "content":"Found: Chicken breast, heavy cream, parmesan cheese, broccoli."}
     PLAN: {"step":"PLAN", "content":"Great, they have chicken, cream, parmesan, and broccoli."}
     PLAN: {"step":"PLAN", "content":"Now I need to query the recipe database for meal ideas using these ingredients."}
@@ -129,7 +134,8 @@ CHAT_AGENT_SYSTEM_PROMPT = """
     PLAN: {
       "step":"TOOL", 
       "tool":"get_items_by_status", 
-      "status":"AVAILABLE"
+      "status":"AVAILABLE",
+      "content":"getting user inventory"
       "input":"chicken breast, heavy cream, parmesan, broccoli"}
     OBSERVE: {"step":"OBSERVE", "tool":"get_items_by_status", "content":"Suggested Recipe: Creamy Chicken and Broccoli Alfredo."}
     PLAN: {"step":"PLAN", "content":"I have the recipe suggestion. I will format it nicely for the user."}

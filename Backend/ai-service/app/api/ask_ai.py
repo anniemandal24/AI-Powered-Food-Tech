@@ -5,9 +5,9 @@ from app.agents.vision_agent import get_image_data
 from app.rag.retrieve import get_vector_search_result
 from app.services.mem import search_in_memory, add_memory
 from app.services.internal_service import get_data_from_inventory, get_items_tobe_expire
-from json import dumps,loads, JSONDecodeError
+from json import dumps,loads
 from bson import ObjectId
-
+import re
 
 @sio.on("ask_ai")
 async def ask_ai_handler(sid, data):
@@ -51,81 +51,100 @@ async def ask_ai_handler(sid, data):
         else:
             conversation_id = ObjectId(conversation_id_str)
 
-        chat_history = get_chat_history(conversation_id=conversation_id)
+        chat_history = await get_chat_history(conversation_id=conversation_id)
         final_output = ""
         ai_response = None
 
+        messages_history = [
+            {
+                "role":"user",
+                "content":user_message
+            },
+            {
+                "role":"system",
+                "content":CHAT_AGENT_SYSTEM_PROMPT
+            }
+        ]
+
         while True:
             
-            memories = await search_in_memory(
-                user_id=user_id,
-                user_query=user_message,
-                conversation_id=str(conversation_id)
-            )
+            # memories = await search_in_memory(
+            #     user_id=user_id,
+            #     user_query=user_message,
+            #     conversation_id=str(conversation_id)
+            # )
 
-            SYSTEM_PROMPT = f"""
-                Here is the recent chat:{chat_history}
-                Here is context about user: {dumps(memories)}
-            """
+            # SYSTEM_PROMPT = f"""
+            #     Here is the recent chat:{chat_history}
+            #     Here is context about user: {dumps(memories)}
+            # """
 
             response = await chat_client.chat.completions.create(
                 model="gemini-3-flash-preview",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": user_message
-                    },
-                    {
-                        "role":"system",
-                        "content":CHAT_AGENT_SYSTEM_PROMPT
-                    },
-                    {
-                        "role":"system",
-                        "content":SYSTEM_PROMPT
-                    }
-                ]
+                messages = messages_history,
+                response_format = {
+                    "type":"json_object"
+                }
             )
 
             current_output = response.choices[0].message.content
-            
-            try:
-                parsed_output = loads(current_output)
 
-            except JSONDecodeError:
-                await sio.emit("ai_status", {
-                    "status": f"Step:OUTPUT, content:{current_output}"
-                }, room=sid)
-                
+            messages_history.append({
+                "role": "assistant",
+                "content": current_output
+            })
+
+            objects = re.findall(r'\{[^{}]+\}',current_output)
+            result = [loads(obj) for obj in objects]
+
+            if(isinstance(result,list)):
+                parsed_output = result[-1]
+            else:
+                parsed_output = result
+
+            step = parsed_output.get("step")
+            await sio.emit("ai_status", {
+                "status": f"Step:{step}, content:{parsed_output.get('content')}"
+            }, room=sid)
+
+            if step and "OUTPUT" in step:
+                final_output = parsed_output.get("content", current_output)
+                ai_response = {
+                    "role": "assistant",
+                    "content": dumps({
+                        "step": step,
+                        "content": final_output
+                    })
+                }
                 await sio.emit("ai_complete", {"done": "true"}, room=sid)
-                final_output = current_output
                 break
 
             tool = parsed_output.get("tool")
             tool_input = parsed_output.get("input")
             tool_data = None
 
-            if "get_image_data" in tool:
-                tool_data = get_image_data(image_url)
+            if tool and "get_image_data" in tool:
+                tool_data = await get_image_data(image_url)
 
-            elif "get_vector_search_result" in tool:
-                tool_data = get_vector_search_result(
+            elif tool and "get_vector_search_result" in tool:
+                tool_data = await get_vector_search_result(
                     user_id = user_id,
                     user_query = user_message,
                     filename = file_name
                 )
 
-            elif "get_data_from_invenntory" in tool:
-                tool_data = get_data_from_inventory(
+            elif tool and "get_data_from_invenntory" in tool:
+                tool_data = await get_data_from_inventory(
                     user_id = user_id,
                     status = parsed_output.get("status")
                 )
 
-            elif "get_items_tobe_expire" in tool:
-                tool_data = get_items_tobe_expire(user_id=user_id)
+            elif tool and "get_items_tobe_expire" in tool:
+                tool_data = await get_items_tobe_expire(user_id=user_id)
 
             if(tool):
                 ai_response = {
-                    "role":"assistant",
+                    "role":"user",
                     "content": dumps({
                         "step":"TOOL",
                         "tool":tool,
@@ -134,23 +153,26 @@ async def ask_ai_handler(sid, data):
                     })
                 }
 
+                messages_history.append(ai_response)
+
             else:
                 ai_response = {
-                    "role":"assistant", "content":{
+                    "role":"assistant", 
+                    "content":{
                         "step":parsed_output.get("step"),
                         "content":parsed_output.get("content")
                     }
                 }
 
-        await add_memory(
-            user_id=user_id,
-            user_query=user_message,
-            conversation_id=conversation_id,
-            ai_response=ai_response
-        )
+            # await add_memory(
+            #     user_id=user_id,
+            #     user_query=user_message,
+            #     conversation_id=str(conversation_id),
+            #     ai_response=ai_response
+            # )
 
         await save_chat_to_db(
-            conversation_id=conversation_id,
+            conversation_id=str(conversation_id),
             user_message=user_message,
             ai_result=final_output
         )

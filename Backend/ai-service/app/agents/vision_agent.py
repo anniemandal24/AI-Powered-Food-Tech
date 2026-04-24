@@ -1,7 +1,7 @@
-from openai import OpenAI
+from openai import OpenAI, AsyncOpenAI
 import os
 
-client = OpenAI(
+client = AsyncOpenAI(
     api_key = os.getenv("GEMINI_API_KEY"),
     base_url = os.getenv("GEMINI_BASE_URL")
 )
@@ -29,8 +29,10 @@ SYSTEM_PROMPT = """
 """
 
 
-def get_image_data(url:str):
-    response = client.chat.completions.create(
+async def get_image_data(url:str):
+    print("get_image_data has been called")
+
+    response = await client.chat.completions.create(
         model="gemini-3-flash-preview",
         messages=[
             {
