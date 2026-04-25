@@ -1,4 +1,6 @@
 import express from "express"
+import { Server } from "socket.io"
+import { createServer } from "http"
 import type { Express, Request, Response } from "express"
 import bodyParser from "body-parser"
 import cookieParser from "cookie-parser"
@@ -7,10 +9,18 @@ import dotenv from "dotenv"
 import internalRouter from "./routes/internal.routes.js"
 import itemRouter from "./routes/item.routes.js"
 import userRouter from "./routes/user.routes.js"
-
+import { jwtAuthSocket } from "./middlewares/jwt.middleware.js"
 dotenv.config()
 
 export const app:Express = express()
+export const httpServer = createServer(app)
+export const io = new Server(httpServer,{
+    cors:{
+        origin:"*"
+    }
+})
+
+io.use(jwtAuthSocket)
 
 const corsOptions = {
     origin:process.env.CORS_ORIGIN,

@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 export interface IFoodItem extends Document {
     user: mongoose.Types.ObjectId;
@@ -11,7 +12,7 @@ export interface IFoodItem extends Document {
     updatedAt:Date;
 
     expiryDate: Date;
-    isEstimatedExpiry: boolean;     // True if the LLM guessed the date
+    isEstimatedExpiry: boolean;     
     status: 'AVAILABLE' | 'CONSUMED' | 'WASTED';
     actionDate?: Date;              // The date the item was eaten or thrown away
     source: 'MANUAL' | 'IMAGE' | 'PDF'; // How it was added
@@ -48,8 +49,9 @@ const foodItemSchema = new Schema<IFoodItem>({
         enum: ['MANUAL', 'IMAGE', 'PDF'], 
         required: true 
     },
-    
-    // embedding: { type: [Number], select: false } 
+
 },{timestamps:true});
+
+foodItemSchema.plugin(mongooseAggregatePaginate)
 
 export const item = mongoose.model<IFoodItem>('item', foodItemSchema);
