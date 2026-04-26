@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sage-50: #f4f7f4;
+  --color-sage-100: #e3ebe3;
+  --color-sage-200: #c7d8c7;
+  --color-sage-300: #9ebf9e;
+  --color-sage-400: #74a074;
+  --color-sage-500: #548454;
+  --color-sage-600: #406840;
+  --color-sage-700: #345334;
+  --color-sage-800: #2b422b;
+  --color-sage-900: #243624;
+
+  --color-citrus-50: #fff9ed;
+  --color-citrus-100: #ffeed3;
+  --color-citrus-200: #ffd8a5;
+  --color-citrus-300: #ffbe6d;
+  --color-citrus-400: #ff9d32;
+  --color-citrus-500: #fe7e0b;
+  --color-citrus-600: #ef6403;
+  --color-citrus-700: #c64b04;
+  --color-citrus-800: #9d3b0c;
+  --color-citrus-900: #7e320d;
+
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-sage-50 text-sage-900 antialiased font-sans;
+  }
+}
+
+/* Custom Scrollbar for Chat */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  @apply bg-sage-200 rounded-full;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  @apply bg-sage-300;
+}
