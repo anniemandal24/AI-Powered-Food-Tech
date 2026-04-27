@@ -10,6 +10,7 @@ import internalRouter from "./routes/internal.routes.js"
 import itemRouter from "./routes/item.routes.js"
 import userRouter from "./routes/user.routes.js"
 import { jwtAuthSocket } from "./middlewares/jwt.middleware.js"
+import { analyticsRouter } from "./routes/analytics.routes.js"
 dotenv.config()
 
 export const app:Express = express()
@@ -42,3 +43,4 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/internal",internalRouter)
 app.use("/api/v1/inventory",itemRouter)
 app.use("/api/v1/users",userRouter)
+app.use("/api/v1/analytics",analyticsRouter)
