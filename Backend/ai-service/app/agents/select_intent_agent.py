@@ -1,9 +1,6 @@
 from openai import AsyncOpenAI
-from agents.prompts import INTENT_CLASSIFIER_AGENT_PROMPT
+from app.agents.prompts import INTENT_CLASSIFIER_AGENT_PROMPT
 from json import loads
-# import asyncio
-# from dotenv import load_dotenv
-# load_dotenv()
 import os
 
 intents = [

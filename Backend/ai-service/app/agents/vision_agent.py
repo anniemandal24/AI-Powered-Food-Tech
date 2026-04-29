@@ -1,5 +1,5 @@
 from openai import AsyncOpenAI
-from agents.prompts import VISION_AGENT_SYSTEM_PROMPT
+from app.agents.prompts import VISION_AGENT_SYSTEM_PROMPT
 import os
 
 client = AsyncOpenAI(

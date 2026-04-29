@@ -1,14 +1,12 @@
-from LangGraph.state import State
 from langchain.chat_models import init_chat_model
 from app.services.mem import search_in_memory, add_memory
-from app.models.chat_model import get_chat_history, conversations_collection, save_chat_to_db
+from app.models.chat_model import get_chat_history, create_new_conversation, save_chat_to_db
 from app.agents.select_intent_agent import get_user_intent
 from app.agents.vision_agent import get_image_data
 from app.rag.retrieve import get_vector_search_result
 from app.services.internal_service import get_inventory
 from app.agents.prompts import get_system_prompt
-from app.api.socket_api import sio
-from bson import ObjectId
+from app.LangGraph.state import State
 
 
 llm = init_chat_model(
@@ -29,25 +27,19 @@ async def get_chat_history_node(state:State):
     conversation_id_str = state["conversation_id"]
     user_id = state["user_id"]
     user_message = state["user_input"]
-    sid = state["sid"]
 
     if not conversation_id_str:
-        new_conv = await conversations_collection.insert_one({
-            "user_id": ObjectId(user_id), 
-            "title": user_message[:30] + "..."}
-        )
-
-        conversation_id = new_conv.inserted_id
-
-        await sio.emit("conversation_started", {
-            "conversation_id": str(conversation_id)
-            }, room=sid)
+        conversation_id = await create_new_conversation(user_id=user_id, user_message=user_message)
         
-        return {**state, "conversation_history":None}
+        return {
+            **state, 
+            "conversation_history":None,
+            "conversation_id":conversation_id
+        }
     
     else:
 
-        history = await get_chat_history(
+        history = get_chat_history(
             conversation_id = conversation_id_str,
         )
 
@@ -78,13 +70,13 @@ async def intent_classifier(state:State):
 def planner(state:State):
     intent = state["intent"]
 
-    if intent == "generate_recipe_from_inventory":
+    if intent == "query_from_inventory":
         return { **state, "action": "fetch_inventory" }
     
-    elif intent == "generate_recipe_from_image":
+    elif intent == "query_from_image":
         return {**state, "action": "get_image_data"}
     
-    elif intent == "generate_recipe_from_pdf":
+    elif intent == "query_from_pdf":
         return {**state, "action": "get_pdf_data"}
     
     # elif intent == "add_inventory":
@@ -102,7 +94,8 @@ def clarify_node(state:State):
 async def memory_write_node(state:State):
     await add_memory(
         user_id = state["user_id"],
-        user_query = state["user_input"]
+        user_query = state["user_input"],
+        ai_response = state["response"]
     )
 
     return state
@@ -146,27 +139,34 @@ async def get_inventory_node(state:State):
 
     
 async def generate_response(state:State):
-    user_id = state["user_id"]
-
+    
     system_prompt = get_system_prompt(
-        state["user_input"],
-        state["memory_context"],
-        state["conversation_history"],
-        state["inventory"],
-        state["expiring_items"],
-        state["image_data"],
-        state["pdf_data"],
-        state["is_direct_input"],
-        state["has_inventory"]
+        state.get("user_input"),
+        state.get("memory_context"),
+        state.get("conversation_history"),
+        state.get("inventory"),       
+        state.get("expiring_items"),   
+        state.get("image_data"),       
+        state.get("pdf_data"),   
+        state.get("is_direct_input"),
+        state.get("has_inventory", False)
     )
 
-    response = await llm.invoke(system_prompt)
+    response = await llm.ainvoke(system_prompt)
+    content_data = response.content if hasattr(response, "content") else response
 
-    return {**state, "response":response}
+    if isinstance(content_data, list):
+        final_ai_string = "".join([
+            block.get("text", "") 
+            for block in content_data 
+            if isinstance(block, dict)
+        ])
+    else:
+        final_ai_string = str(content_data)
+
+    print(final_ai_string)
+    return {**state, "response":final_ai_string}
 
 def formatter(state):
     return state
-    
-
-
 

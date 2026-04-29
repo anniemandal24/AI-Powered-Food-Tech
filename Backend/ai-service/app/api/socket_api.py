@@ -111,16 +111,17 @@ async def ask_ai_handler(sid, data):
 
         config = {
             "configurable": {
-                "thread_id": "Rounak"
+                "thread_id": session.get("user_id")
             }
         }
 
-        response_state = await graph.invoke(initial_state,config = config)
+        response_state = await graph.ainvoke(initial_state,config = config)
         response = response_state["response"]
 
         await sio.emit("ai_complete", {
                 "done": "true",
-                "response": response
+                "response": response,
+                "conversation_id":response_state["conversation_id"]
             }, room=sid
         )
 
