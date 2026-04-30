@@ -4,11 +4,11 @@ from json import loads
 import os
 
 intents = [
-    "generate_recipe_from_inventory",
-    "generate_recipe_from_image",
-    "generate_recipe_from_pdf",
-    "generate_recipe_from_input",
-    "add_inventory",
+    "query_from_inventory",
+    "query_from_image",
+    "query_from_pdf",
+    "query_from_input",
+    # "add_inventory",
     "waste_reduction",
     "ask_storage_tip",
     "clarify"
