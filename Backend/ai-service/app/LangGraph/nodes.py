@@ -3,7 +3,7 @@ from app.services.mem import search_in_memory, add_memory
 from app.models.chat_model import get_chat_history, create_new_conversation, save_chat_to_db
 from app.agents.select_intent_agent import get_user_intent
 from app.agents.vision_agent import get_image_data
-from app.rag.retrieve import get_vector_search_result
+from app.RAG.retrieve import get_vector_search_result
 from app.services.internal_service import get_inventory
 from app.agents.prompts import get_system_prompt
 from app.LangGraph.state import State
@@ -121,19 +121,20 @@ async def pdf_data_node(state:State):
 async def get_inventory_node(state:State):
     data = await get_inventory(user_id = state["user_id"])
 
-    expiring_items = state["expiring_items"]
-
-    for item_dict in data:
-        if item_dict["isEstimatedExpiry"] == True:
-            expiring_items.append(item_dict["item_name"])
-
     if data:
+        expiring_items = []
+
+        for item_dict in data:
+            if item_dict["isEstimatedExpiry"] == True:
+                expiring_items.append(item_dict["item_name"])
+
         return {
             **state,
             "inventory":data,
-            "has_inventory":True
+            "has_inventory":True,
+            "expiring_items":expiring_items
         }
-    
+
     else:
         return {**state, "has_inventory":None}
 

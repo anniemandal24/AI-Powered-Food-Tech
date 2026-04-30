@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import datetime, timezone
-from typing import Literal,Any
+from typing import Literal
 from bson import ObjectId
 from app.db.mongo import db
 
@@ -69,3 +69,12 @@ async def get_chat_history(conversation_id:str):
     recent = await cursor.to_list(length=6)
     recent.reverse()
     return "\n".join([f"{'User' if m['sender']=='user' else 'AI'}: {m['content']}" for m in recent])
+
+
+async def create_new_conversation(user_id:str, user_message:str):
+    new_conv = await conversations_collection.insert_one({
+            "user_id": ObjectId(user_id), 
+            "title": user_message[:30] + "..."}
+        )
+
+    return new_conv.inserted_id

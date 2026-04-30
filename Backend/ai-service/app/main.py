@@ -6,7 +6,6 @@ from app.api.socket_api import sio
 import app.db.mongo 
 import socketio
 import uvicorn
-import os
 load_dotenv()
 
 app = FastAPI(
@@ -16,7 +15,7 @@ app = FastAPI(
 )
 
 app.add_middleware(CORSMiddleware,
-    allow_origins=[os.getenv("INTERNAL_BASE_URL")], 
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]

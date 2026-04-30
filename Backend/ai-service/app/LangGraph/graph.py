@@ -24,9 +24,10 @@ graph_builder.add_node("memory_write_node",memory_write_node)
 graph_builder.add_node("formatter",formatter)
 
 
-graph_builder.add_edge(START,"get_memory_node")
-graph_builder.add_edge("get_memory_node","get_chat_history_node")
-graph_builder.add_edge("get_chat_history_node","intent_classifier")
+# graph_builder.add_edge(START,"get_memory_node")
+graph_builder.add_edge(START,"intent_classifier")
+# graph_builder.add_edge("get_memory_node","get_chat_history_node")
+# graph_builder.add_edge("get_chat_history_node","intent_classifier")
 
 graph_builder.add_edge("intent_classifier","planner")
 
@@ -53,9 +54,10 @@ graph_builder.add_edge("image_data_node","generate_response")
 graph_builder.add_edge("pdf_data_node","generate_response")
 graph_builder.add_edge("get_inventory_node","generate_response")
 
-graph_builder.add_edge("generate_response","memory_write_node")
-graph_builder.add_edge("memory_write_node","add_chat_node")
-graph_builder.add_edge("add_chat_node","formatter")
+# graph_builder.add_edge("generate_response","memory_write_node")
+# graph_builder.add_edge("memory_write_node","add_chat_node")
+# graph_builder.add_edge("add_chat_node","formatter")
+graph_builder.add_edge("generate_response","formatter")
 
 graph_builder.add_edge("formatter",END)
 
