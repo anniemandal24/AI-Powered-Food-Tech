@@ -1,0 +1,40 @@
+.cta-section {
+    background: linear-gradient(135deg, #1a7a4a 0%, #27ae60 60%, #1a7a4a 100%);
+    padding: 100px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.cta-section-h2 {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    color: white;
+    margin-bottom: 16px;
+    position: relative;
+}
+.cta-section-p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    position: relative;
+}
+.cta-btn {
+    text-decoration-line: none;
+    background: white;
+    color: #1a7a4a;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+    position: relative;
+    display: inline-block;
+}
+.cta-btn:hover{
+    transform: translateY(-4px);
+    box-shadow: 0px 16px 48px rgba(0, 61, 0, 0.42);
+}

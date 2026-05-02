@@ -1,0 +1,89 @@
+.testimonials {
+    background: white;
+        padding: 100px 60px;
+}
+.section-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a7a4a;
+    margin-bottom: 12px;
+}
+.section-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    color: #0f1f15;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s ease;
+}
+.test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 60px;
+}
+.test-card {
+    background: #faf7f2;
+    border-radius: 24px;
+    padding: 32px;
+    border: 1px solid rgba(26, 122, 74, 0.08);
+    transition: all 0.3s;
+}
+.test-card:hover{
+    transform: translateY(-4px);
+    box-shadow: 0px 16px 40px rgba(13, 56, 34, 0.285);
+}
+.stars {
+    color: #f5c842;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+.test-quote {
+    font-size: 0.95rem;
+    color: #1a2e22;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+.test-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.test-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+.av1 {
+    background: #d4edda;
+}
+.av2 {
+    background: #ffd1f3;
+}
+.av3 {
+    background: #fff8b5;
+}
+.test-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+.test-role {
+    font-size: 0.78rem;
+    color: #6b8c77;
+}

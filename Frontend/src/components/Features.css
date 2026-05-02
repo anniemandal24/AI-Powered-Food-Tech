@@ -1,0 +1,197 @@
+.features {
+    background: #faf7f2;
+}
+
+section {
+    padding: 100px 60px;
+}
+
+.section-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a7a4a;
+    margin-bottom: 12px;
+}
+
+.section-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    color: #0f1f15;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.features-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.feature-phone {
+    background: #0f1f15;
+    border-radius: 36px;
+    padding: 32px;
+    box-shadow: 0 40px 100px rgba(15, 31, 21, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.phone-screen-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: white;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notification-dot {
+    width: 8px;
+    height: 8px;
+    background: #2ecc71;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.9);
+        opacity: 0.7;
+    }
+}
+.ingredient-list {
+    height: 350px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ingredient-list::-webkit-scrollbar{
+  background: transparent;
+  width: 8px;
+}
+.ingredient-list::-webkit-scrollbar-thumb{
+  background: #2ecc71;
+  border-radius: 30px;
+}
+.ingredient-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 12px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+.ing-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.ing-emoji {
+    font-size: 1.4rem;
+}
+.ing-qty {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+.ing-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: white;
+}
+.exp-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 50px;
+}
+.exp-warn {
+    background: rgba(245, 200, 66, 0.2);
+    color: #f5c842;
+}
+.ai-recipe-box {
+    margin-top: 16px;
+    background: linear-gradient(135deg, #1a7a4a, #27ae60);
+    border-radius: 16px;
+    padding: 16px;
+}
+.ai-label {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+.ai-recipe-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 800;
+    color: white;
+    font-size: 1.1rem;
+}
+.ai-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.ai-tag {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 10px;
+    border-radius: 50px;
+}
+.features-list {
+    display: flex;
+    flex-direction: column;
+}
+.feature-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+.feature-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: #e8f5ee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    border: 1px solid rgba(26, 122, 74, 0.12);
+}
+.feature-text-h3 {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+}
+.feature-text-p {
+    font-size: 0.9rem;
+    color: #6b8c77;
+    line-height: 1.6;
+}
