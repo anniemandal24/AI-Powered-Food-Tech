@@ -5,6 +5,7 @@ import { httpServer } from "./app.js";
 import { connectDB } from "./db/index.js";
 import { authRouter } from "./routes/auth.routes.js";
 import { inventoryExpirationCorn } from "./services/cron.js"
+import "./utils/workers.js"
 
 const port = process.env.PORT as string
 

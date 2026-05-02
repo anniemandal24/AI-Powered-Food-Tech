@@ -1,5 +1,11 @@
 import cron from "node-cron"
 import { item } from "../models/item.model.js"
+import {user} from "../models/user.model.js"
+import {
+    expiryNotificationQueue,
+    autoWastedQueue
+} from "../utils/queues.js"
+import { delay } from "bullmq"
 
 export async function inventoryExpirationCorn(io:any) {
     cron.schedule("0 0 * * *",async ()=>{
@@ -15,12 +21,13 @@ export async function inventoryExpirationCorn(io:any) {
                         expiryDate:{
                             $lte:twoDaysFromNow,
                             $gt:now
-                        }
+                        },
+                        status:{$nin:["CONSUMED","WASTED"]}
                     }
                 },
                 {
                     $group:{
-                        _id:"$_id",
+                        _id:"$user",
                         items:{
                             $push:"$name"
                         }
@@ -29,22 +36,39 @@ export async function inventoryExpirationCorn(io:any) {
             ])
             
             if(expiringSoon.length>0){
-                await item.updateMany(
-                    { 
-                        expiryDate: { $gt: now, $lte: twoDaysFromNow }, 
-                        status: { $ne: 'CONSUMED' },
-                        estimatedExpiry: { $ne: true }
-                    },
-                    { $set: { estimatedExpiry: true } }
-                )
+                
 
-                for (const item of expiringSoon) {
-                    const userId = item._id.toString()
+                for (const groupedItem of expiringSoon) {
+                    const userId = groupedItem._id.toString()
 
                     io.to(userId).emit('inventory_warning', {
-                        message: `Heads up! Your ${item.items.join(', ')} will expire in less than 2 days.`,
-                        items: item.items
+                        message: `Heads up! Your ${groupedItem.items.join(', ')} will expire in less than 2 days.`,
+                        items: groupedItem.items
                     });
+
+                    const foundUser= await user.findById(userId).select("email name")
+                    if(foundUser){
+                        const itemDetails=await item.find({
+                            user:groupedItem._id,
+                            expiryDate:{$lte:twoDaysFromNow,$gt:now},
+                            status:{$nin:["CONSUMED","WASTED"]}
+                        }).select("name category expiryDate quantity")
+
+                        await expiryNotificationQueue.add("sendExpiryNotification",{
+                            email:foundUser.email,
+                            name:foundUser.name,
+                            items:itemDetails
+                        },
+                        {
+                            attempts:3,
+                            backoff:{
+                                type:"exponential",
+                                delay:5000
+                            }
+                        }
+                    )
+                    console.log(`Expiry notification queued for ${foundUser.email}`)
+                    }
                 }
             }
 
@@ -52,12 +76,12 @@ export async function inventoryExpirationCorn(io:any) {
                 {
                     $match:{
                         expiryDate:{ $lt:now },
-                        status:{ $ne: ['CONSUMED', 'WASTED']}
+                        status:{ $nin: ['CONSUMED', 'WASTED']}
                     }
                 },
                 {
                     $group:{
-                        _id:"$_id",
+                        _id:"$user",
                         items:{
                             $push:"$name"
                         }
@@ -68,24 +92,47 @@ export async function inventoryExpirationCorn(io:any) {
             if(expiredItems.length>0){
 
                 const updateResult = await item.updateMany(
-                    { expiryDate: { $lt: now }, status: { $ne: ['CONSUMED', 'WASTED'] } },
+                    { expiryDate: { $lt: now }, status: { $nin: ['CONSUMED', 'WASTED'] } },
                     { $set: { status: 'WASTED' } }
                 )
 
-                for(const item of expiredItems){
-                    const userId = item._id.toString()
+                for(const groupedItem of expiredItems){
+                    const userId = groupedItem._id.toString()
 
                     io.to(userId).emit('inventory_alert', {
-                        message: ` Alert: ${item.items.join(', ')} just expired in your inventory!`,
-                        items: item.items
+                        message: ` Alert: ${groupedItem.items.join(', ')} just expired in your inventory!`,
+                        items: groupedItem.items
                     });
 
-                    console.log(`Alert message sent to user`)
+                    const foundUser=await user.findById(userId).select("email name")
+
+                    if(foundUser){
+                        const itemDetails=await item.find({
+                            user:groupedItem._id,
+                            expiryDate:{$lt:now},
+                            status:"WASTED"
+                        }).select("name category expiryDate quantity")
+
+                        await autoWastedQueue.add("sendAutoWastedNotification",{
+                            email:foundUser.email,
+                            name:foundUser.name,
+                            items:itemDetails
+                        },
+                        {
+                            attempts:3,
+                            backoff:{
+                                type:"exponential",
+                                delay:5000
+                            }
+                        }
+                    )
+                    console.log(`Auto wasted notification queued for ${foundUser.email}`)
                 }
             }
+        }
 
         }catch(err){
-            console.log(`Error occured in inventoryExpirationCorn function`)
+            console.log(`Error occured in inventoryExpirationCron function`)
         }
     })
 } 
