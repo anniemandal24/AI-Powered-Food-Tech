@@ -1,4 +1,6 @@
 from app.models.chat_model import conversations_collection, messages_collection
+from app.LangGraph.state import State
+from app.LangGraph.graph import graph
 from bson import ObjectId
 import socketio
 import jwt
@@ -76,3 +78,55 @@ async def fetch_messages(sid, data):
         "messages": [serialize_mongo(m) for m in messages]
     }, room=sid)
 
+
+@sio.on("ask_ai")
+async def ask_ai_handler(sid, data):
+    try:
+
+        if not sid:
+            return await sio.emit("ai_error", {
+                "error": "No sid provided"
+            }, room=sid)
+
+        if not data:
+            return await sio.emit("ai_error", {
+                "error": "No data provided"
+            }, room=sid)
+
+        session = await sio.get_session(sid)
+
+        if not data.get("message"): 
+            return await sio.emit("ai_error", {
+                "error": "No message provided"
+            }, room=sid)
+        
+        initial_state = State(
+            sid = sid,
+            user_id = session.get("user_id"),
+            user_input = data.get("message"),
+            image_url = data.get("url"),
+            file_name = data.get("filename"),
+            conversation_id = data.get("conversation_id")
+        )
+
+        config = {
+            "configurable": {
+                "thread_id": session.get("user_id")
+            }
+        }
+
+        response_state = await graph.ainvoke(initial_state,config = config)
+        response = response_state["response"]
+
+        await sio.emit("ai_complete", {
+                "done": "true",
+                "response": response,
+                "conversation_id":response_state["conversation_id"]
+            }, room=sid
+        )
+
+    except Exception as e:
+        print(f"Master Loop Error: {e}")
+        await sio.emit("ai_error", {
+            "error": "An error occurred while processing your request."
+        }, room=sid)

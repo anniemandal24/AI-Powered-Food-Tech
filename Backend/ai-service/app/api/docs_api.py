@@ -1,6 +1,6 @@
 from fastapi import UploadFile, APIRouter, Depends, HTTPException
 from app.dependencies.jwt import verify_jwt
-from app.rag.index import text_to_embeddings
+from app.RAG.index import text_to_embeddings
 import tempfile
 import os
 

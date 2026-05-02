@@ -78,8 +78,7 @@ userSchema.methods.generateAccessToken = function () {
     const payload = {
         _id: this._id,
         fullname: this.fullname,
-        isActive: this.isActive,
-        role: this.role
+        isActive:true
     }
 
     const options: SignOptions = {
@@ -97,9 +96,7 @@ userSchema.methods.generateRefreshToken = function () {
     const payload = {
         _id:this._id,
         fullname: this.fullname,
-        phone:this.phone,
-        email:this.email,
-        role:this.role
+        email:this.email
     }
 
     const options:SignOptions = {

@@ -3,11 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from app.api.docs_api import router
 from app.api.socket_api import sio
-from app.api.ask_ai import ask_ai_handler
 import app.db.mongo 
 import socketio
 import uvicorn
-import os
 load_dotenv()
 
 app = FastAPI(
@@ -17,7 +15,7 @@ app = FastAPI(
 )
 
 app.add_middleware(CORSMiddleware,
-    allow_origins=[os.getenv("INTERNAL_BASE_URL")], 
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]

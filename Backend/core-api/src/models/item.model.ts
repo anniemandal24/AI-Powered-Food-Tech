@@ -7,6 +7,7 @@ export interface IFoodItem extends Document {
     name: string;
     category?: string;              // e.g., 'Dairy', 'Produce', 'Meat'
     quantity?: string;              // e.g., '2 lbs', '1 carton'
+    cost?:Number
 
     createdAt:Date;
     updatedAt:Date;
@@ -32,6 +33,7 @@ const foodItemSchema = new Schema<IFoodItem>({
     },
     category: { type: String },
     quantity: { type: String },
+    cost:{type:Number},
     
     expiryDate: { type: Date, required: true, index: true }, // Indexed for cron job queries
     isEstimatedExpiry: { type: Boolean, default: false },

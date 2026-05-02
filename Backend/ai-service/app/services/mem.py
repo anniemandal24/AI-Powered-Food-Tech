@@ -38,14 +38,12 @@ config = {
 
 mem_client = Memory.from_config(config)
 
-async def search_in_memory(user_id, user_query, conversation_id):
+async def search_in_memory(user_id, user_query):
     try:
         get_mem = await mem_client.search(
-        user_id = user_id,
-        query = user_query,
-            filters = {
-                "conversation_id":conversation_id
-            }
+            user_id = user_id,
+            query = user_query,
+            limit = 4
         )
 
         memories = [
@@ -60,17 +58,14 @@ async def search_in_memory(user_id, user_query, conversation_id):
         return []
 
 
-async def add_memory(user_id:str, user_query:str, conversation_id, ai_response):
+async def add_memory(user_id:str, user_query:str, ai_response:str):
     try:
         await mem_client.add(
-        messages = [
-            {"role":"user", "content":user_query},
-            {"role":"assistant", "content":ai_response}
-        ],
-        user_id = user_id,
-        metadata = {
-                "conversation_id": conversation_id
-            }
+            messages = [
+                {"role":"user", "content":user_query},
+                {"role":"assistant", "content":ai_response}
+            ],
+            user_id = user_id
         )
 
         print("Memory added to mem0")
