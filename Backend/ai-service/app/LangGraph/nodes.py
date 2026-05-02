@@ -34,12 +34,11 @@ async def get_chat_history_node(state:State):
         return {
             **state, 
             "conversation_history":None,
-            "conversation_id":conversation_id
+            "conversation_id":str(conversation_id)
         }
     
     else:
-
-        history = get_chat_history(
+        history = await get_chat_history(
             conversation_id = conversation_id_str,
         )
 
