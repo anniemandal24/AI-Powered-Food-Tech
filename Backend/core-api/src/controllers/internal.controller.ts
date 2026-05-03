@@ -4,15 +4,14 @@ import { ApiError } from "../utils/ApiError.js";
 import {item} from "../models/item.model.js";
 import {user} from "../models/user.model.js";
 import mongoose from "mongoose";
-import { updateItemStatus } from "./item.controller.js";
 
 export const getAvailableInventory=asyncHandler(async(req,res)=>{
     const user_id=req.params.user_id as string
     if(!user_id){
-        throw new ApiError(400,"user_id is required")
+        return new ApiError(400,"user_id is required")
     }
     if(!mongoose.Types.ObjectId.isValid(user_id)){
-        throw new ApiError(400,"Invalid user_id");
+        return new ApiError(400,"Invalid user_id");
     }
     const userObjectId=new mongoose.Types.ObjectId(user_id);
     const items=await item.aggregate([
@@ -36,7 +35,7 @@ export const getAvailableInventory=asyncHandler(async(req,res)=>{
     if(!items.length){
         const userExists=await user.exists({_id:userObjectId})
         if(!userExists){
-            throw new ApiError(404,"User not found")
+            return new ApiError(404,"User not found")
         }
     }
     res.status(200).json(new ApiResponse(200,items,"Available Inventory fetched successfully!"))
@@ -46,17 +45,17 @@ export const getItemByStatus=asyncHandler(async(req,res)=>{
     const statustr=status as string;
     const {user_id}=req.body;
     if(!user_id){
-        throw new ApiError(400,"user_id is required")
+        return new ApiError(400,"user_id is required")
     }
     if(!mongoose.Types.ObjectId.isValid(user_id)){
-        throw new ApiError(400,"Invalid user_id")
+        return new ApiError(400,"Invalid user_id")
     }
     const foundUser=await user.findById(user_id);
     if(!foundUser){
-        throw new ApiError(404,"User not found")
+        return new ApiError(404,"User not found")
     }
     if(!["AVAILABLE","CONSUMED","WASTED"].includes(statustr.toUpperCase())){
-        throw new ApiError(400,"status must be AVAILABLE,CONSUMED or WASTED")
+        return new ApiError(400,"status must be AVAILABLE,CONSUMED or WASTED")
     }
     const items=await item.find({user:new mongoose.Types.ObjectId(user_id),status:statustr.toUpperCase()}).select("name ExpiryDate quantity status")
     res.status(200).json(new ApiResponse(200,{
