@@ -1,8 +1,20 @@
 import "./Hero.css";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Hero() {
+  const navigate = useNavigate();
+
+  const handleScanClick = () => {
+    const user = localStorage.getItem("user");
+
+    if (user) {
+      navigate("/scan-fridge");
+    } else {
+      navigate("/login-signup");
+    }
+  };
+
   return (
     <section className="hero" id="hero">
       <div className="hero-bg"></div>
@@ -26,9 +38,9 @@ export default function Hero() {
         </p>
 
         <div className="hero-btns">
-          <Link className="btn-primary" to="/scan-fridge">
+          <button className="btn-primary" onClick={handleScanClick}>
             📸 Scan Your Fridge
-          </Link>
+          </button>
 
           <button className="btn-secondary">
             Watch Demo →

@@ -11,6 +11,8 @@ import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import ScanFridge from "./components/ScanFridge";
 import Home from "./components/Home";
+import LoginSignup from "./components/LoginSignup";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
@@ -18,7 +20,15 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/scan-fridge" element={<ScanFridge />} />
+          <Route
+          path="/scan-fridge"
+          element={
+            <ProtectedRoute>
+              <ScanFridge />
+            </ProtectedRoute>
+          }
+        />
+          <Route path="/login-signup" element={<LoginSignup />} />
         </Routes>
       </BrowserRouter>
     </>
