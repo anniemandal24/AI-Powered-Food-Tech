@@ -1,10 +1,10 @@
 import './Navbar.css';
 import { useState, useEffect } from 'react';
-import HowItWorks from './HowItWorks';
-import Features from './Features';
-import Impact from './Impact';
-import Testimonials from './Testimonials';
-import Hero from './Hero';
+import HowItWorks from '../home/HowItWorks';
+import Features from '../home/Features';
+import Impact from '../home/Impact';
+import Testimonials from '../home/Testimonials';
+import Hero from '../home/Hero';
 
 export default function Navbar() {
   const handleScroll = () => {
