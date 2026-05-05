@@ -6,7 +6,8 @@ import {
     loginUser,
     refreshAccessToken,
     logoutUser,
-    changePassword
+    changePassword,
+    getCurrentUser
 } from "../controllers/auth.controller.js"
 
 import { 
@@ -22,6 +23,6 @@ authRouter.post('/login',validate(loginUserSchema), loginUser)
 authRouter.post('/refresh-token', refreshAccessToken)
 authRouter.post('/logout',jwtAuthMiddleware, logoutUser)
 authRouter.post('/change-password',jwtAuthMiddleware, validate(changePasswordSchema), changePassword)
-
+authRouter.get('/me',jwtAuthMiddleware,getCurrentUser)
 
 

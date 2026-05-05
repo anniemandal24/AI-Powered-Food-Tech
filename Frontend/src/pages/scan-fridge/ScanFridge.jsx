@@ -1,6 +1,8 @@
 import "./ScanFridge.css";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function ScanFridge() {
   const videoRef = useRef(null);
@@ -10,6 +12,7 @@ export default function ScanFridge() {
   const [image, setImage] = useState(null);
   const [stream, setStream] = useState(null);
   const [cameraOn, setCameraOn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -52,6 +55,15 @@ export default function ScanFridge() {
     setCameraOn(false);
   };
 
+  // 🧹 Cleanup on unmount (IMPORTANT)
+  useEffect(() => {
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [stream]);
+
   // 📁 Upload from device
   const handleUploadClick = () => {
     fileInputRef.current.click();
@@ -72,26 +84,33 @@ export default function ScanFridge() {
     }
 
     try {
+      setLoading(true);
+
       const blob = await fetch(image).then((res) => res.blob());
 
       const formData = new FormData();
       formData.append("file", blob, "fridge.png");
 
-      const res = await fetch("http://localhost:5000/upload", {
+      const res = await fetch(`${API_BASE}/upload`, {
         method: "POST",
         body: formData,
       });
 
+      if (!res.ok) throw new Error("Upload failed");
+
       const data = await res.json();
       console.log(data);
 
-      alert("Upload successful 🚀");
+      // ✅ FIXED NAVIGATION FLOW
+      navigate("/chat", {
+        state: { image, result: data },
+      });
 
-      // 🔁 Redirect to home page
-      navigate("/");
     } catch (err) {
       console.error(err);
       alert("Upload failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -163,8 +182,12 @@ export default function ScanFridge() {
           />
 
           {/* 🚀 Send */}
-          <button className="btn primary" onClick={sendToBackend}>
-            🚀 Scan Now
+          <button
+            className="btn primary"
+            onClick={sendToBackend}
+            disabled={!image || loading}
+          >
+            {loading ? "Processing..." : "🚀 Scan Now"}
           </button>
         </div>
 

@@ -1,36 +1,12 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from 'react'
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Stats from "./components/Stats";
-import HowItWorks from "./components/HowItWorks";
-import Features from "./components/Features";
-import Impact from "./components/Impact";
-import Testimonials from "./components/Testimonials";
-import CTA from "./components/CTA";
-import Footer from "./components/Footer";
-import ScanFridge from "./components/ScanFridge";
-import Home from "./components/Home";
-import LoginSignup from "./components/LoginSignup";
-import ProtectedRoute from "./components/ProtectedRoute";
+import AuthProvider from "./context/AuthContext";
+import AppRoutes from "./routes";
 
-export default function App() {
+function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-          path="/scan-fridge"
-          element={
-            <ProtectedRoute>
-              <ScanFridge />
-            </ProtectedRoute>
-          }
-        />
-          <Route path="/login-signup" element={<LoginSignup />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <AuthProvider>   
+      <AppRoutes />
+    </AuthProvider>
   );
 }
+
+export default App;

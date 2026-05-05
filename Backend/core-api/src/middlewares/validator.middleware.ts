@@ -12,18 +12,16 @@ export const validate = (schema:z.ZodType)=>{
 
             return next()
 
-        }catch(err){
-            if(err instanceof ZodError){
-                const errorMessages = err.message
-                return res.status(400).json({
-                    success:false,
-                    error:"Invalid input data",
-                    details:errorMessages
-                })
-            }
-
-            next(err)
-        }
+        } catch (err) {
+    if (err instanceof ZodError) {
+        return res.status(400).json({
+            success: false,
+            error: "Validation Failed",
+            details: err.issues.map(e => ({ path: e.path[1], message: e.message })) // Extract the field and message
+        });
     }
+    next(err);
+    }
+}
 }
     

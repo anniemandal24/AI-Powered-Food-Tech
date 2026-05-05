@@ -66,14 +66,14 @@ export const getItemByStatus=asyncHandler(async(req,res)=>{
 export const getToBeExpiredItems=asyncHandler(async(req,res)=>{
     const{user_id}=req.body
     if(!user_id){
-        throw new ApiError(400,"user_id is required")
+        return new ApiError(400,"user_id is required")
     }
     if(!mongoose.Types.ObjectId.isValid(user_id)){
-        throw new ApiError(400,"Invalid user_id")
+        return new ApiError(400,"Invalid user_id")
     }
     const foundUser=await user.findById(user_id)
     if(!foundUser){
-        throw new ApiError(404,"user not found")
+        return new ApiError(404,"user not found")
     }
     const today=new Date();
     const threeDaysLater=new Date();
@@ -92,20 +92,20 @@ export const getItemByStatusAndCategory=asyncHandler(async(req,res)=>{
     const {user_id}=req.body
 
     if(!user_id){
-        throw new ApiError(400,"user_id is required")
+        return new ApiError(400,"user_id is required")
     }
     if(!mongoose.Types.ObjectId.isValid(user_id)){
-        throw new ApiError(400,"Invalid user_id")
+        return new ApiError(400,"Invalid user_id")
     }
     const foundUser=await user.findById(user_id)
     if(!foundUser){
-        throw new ApiError(404,"user not found")
+        return new ApiError(404,"user not found")
     }
     if(!["AVAILABLE","CONSUMED","WASTED"].includes(status.toUpperCase())){
-        throw new ApiError(400,"status must be AVAILABLE,CONSUMED or WASTED")
+        return new ApiError(400,"status must be AVAILABLE,CONSUMED or WASTED")
     }
     if(!category){
-        throw new ApiError(400,"category is required")
+        return new ApiError(400,"category is required")
     }
     
     const items=await item.find({
