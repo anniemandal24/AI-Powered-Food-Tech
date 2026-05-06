@@ -1,0 +1,118 @@
+.inventory-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.inventory-header h1 {
+  font-size: 2rem;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.inventory-header p {
+  color: #666;
+}
+
+.add-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+  background-color: #27ae60;
+}
+
+/* Grid Layout */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Card */
+.inventory-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: 1px solid #f0f0f0;
+}
+
+.card-emoji {
+  font-size: 2.5rem;
+  background: #f9f9f9;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.card-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #2c3e50;
+}
+
+.card-info .qty {
+  margin: 4px 0 10px;
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* Expiry Tags */
+.status-tag {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.status-tag.safe {
+  background: #e8faf0;
+  color: #2ecc71;
+}
+
+.status-tag.warning {
+  background: #fff9e6;
+  color: #f1c40f;
+}
+
+.status-tag.critical {
+  background: #fff0f0;
+  color: #e74c3c;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 100px 20px;
+  background: #fbfbfb;
+  border-radius: 20px;
+  border: 2px dashed #eee;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}

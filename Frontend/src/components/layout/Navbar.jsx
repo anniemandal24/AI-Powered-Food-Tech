@@ -6,6 +6,7 @@ import Impact from '../home/Impact';
 import Testimonials from '../home/Testimonials';
 import Hero from '../home/Hero';
 import { Link } from "react-router-dom";
+import NotificationBell from "../home/notificationBell";
 
 <Link to="/chat">AI Chat</Link>
 
@@ -42,6 +43,7 @@ export default function Navbar() {
         <li><a onClick={handleScroll2}>Features</a></li>
         <li><a onClick={handleScroll3}>Impact</a></li>
         <li><a onClick={handleScroll4}>Reviews</a></li>
+        <li><NotificationBell /></li>
       </div>
       <button className='nav-cat'>Get Started Free</button>
     </nav>
