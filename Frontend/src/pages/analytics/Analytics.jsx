@@ -140,12 +140,12 @@ export default function AnalyticsUI() {
                             <LineChart data={safeData}>
                                 <defs>
                                     <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.4} />
-                                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                                        <stop offset="0%" stopColor="#ef4444" stopOpacity={0.4} />
+                                        <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
                                     </linearGradient>
                                     <linearGradient id="pink" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#ec4899" stopOpacity={0.4} />
-                                        <stop offset="100%" stopColor="#ec4899" stopOpacity={0} />
+                                        <stop offset="0%" stopColor="#22c55e" stopOpacity={0.4} />
+                                        <stop offset="100%" stopColor="#22c55e" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
 
@@ -157,8 +157,8 @@ export default function AnalyticsUI() {
                                 <Area dataKey="spent" fill="url(#blue)" />
                                 <Area dataKey="saved" fill="url(#pink)" />
 
-                                <Line dataKey="spent" stroke="#3b82f6" strokeWidth={3} />
-                                <Line dataKey="saved" stroke="#ec4899" strokeWidth={3} />
+                                <Line dataKey="spent" stroke="#ef4444" strokeWidth={3} />
+                                <Line dataKey="saved" stroke="#22c55e" strokeWidth={3} />
                             </LineChart>
                         </ResponsiveContainer>
                     </div>

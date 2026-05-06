@@ -9,6 +9,11 @@
   border-radius: 16px;
   margin-bottom: 20px;
 }
+.card-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .tabs span {
   margin-left: 10px;
@@ -22,9 +27,19 @@
 
 /* DATE FILTER */
 .date-filter {
+  justify-content: center;
+    align-items: center;
   display: flex;
   gap: 10px;
   margin: 10px 0;
+}
+.date-filter input:hover {
+  border:1px solid #22c55e;
+  transition: border 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0px 5px rgba(34, 197,94, 0.5);
+  transform: translateY(-2px);
+  background: #f3f4f6;
 }
 
 .date-filter input {
