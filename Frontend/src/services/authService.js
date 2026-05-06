@@ -21,7 +21,7 @@ export const logoutUser = () => {
 };
 
 export const getCurrentUser = () => {
-  return apiFetch("api/v1/auth/me", {
+  return apiFetch("api/v1/users/me", {//
     method: "GET",
   });
 };
