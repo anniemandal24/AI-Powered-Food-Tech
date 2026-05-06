@@ -16,12 +16,15 @@ export default function Home() {
 
   // 🔐 Handle Scan Button Click (with auth check)
   const handleScanClick = () => {
-    const user = localStorage.getItem("user");
+    const token = localStorage.getItem("accessToken");
 
-    if (user) {
-      navigate("/scan-fridge");
-    } else {
-      navigate("/login-signup", { state: { from: "/scan-fridge" } });
+    if (token && token !== "undefined") {
+      console.log("Auth verified: Navigating to Inventory");
+      navigate("/inventory")}
+      else {
+      console.log("No token found: Redirecting to Login");
+      // Use the 'state' property so the user is sent back here after logging in
+      navigate("/login-signup", { state: { from: "/inventory" } });
     }
   };
 
