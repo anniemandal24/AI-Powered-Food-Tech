@@ -1,0 +1,88 @@
+.container {
+  padding: 20px;
+  font-family: sans-serif;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.tabs span {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.active {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+/* DATE FILTER */
+.date-filter {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.date-filter input {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+/* DONUT */
+.donut-wrapper {
+
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.donut-box {
+  position: relative;
+  width: 250px;
+  height: 250px;
+}
+
+.center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.main-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.sub-text {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.legend {
+  font-size: 14px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.green {
+  background: #22c55e;
+}
+
+.red {
+  background: #ef4444;
+}
+.yellow {
+  background: #facc15;
+}
