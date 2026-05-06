@@ -146,25 +146,3 @@ export const logoutUser = asyncHandler(async (req:Request, res:Response)=>{
     .json({message:'User logged out'})
 })
 
-export const getCurrentUser = asyncHandler(async (req: Request, res: Response) => {
-    // req.user is set by jwtAuthMiddleware
-    if (!req.user?._id) {
-        return res.status(401).json({
-            message: "Unauthorized"
-        });
-    }
-
-    const currentUser = await user.findById(req.user._id).select(
-        "-passwordHash -refreshToken"
-    );
-
-    if (!currentUser) {
-        return res.status(404).json({
-            message: "User not found"
-        });
-    }
-
-    return res.status(200).json(
-        new ApiResponse(200, currentUser, "Current user fetched successfully")
-    );
-});
