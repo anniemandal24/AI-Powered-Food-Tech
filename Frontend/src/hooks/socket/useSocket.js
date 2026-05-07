@@ -8,8 +8,13 @@ export default function useSocket() {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken"); //GET TOKEN
+
     const newSocket = io(SOCKET_URL, {
-      transports: ["websocket", "polling"],
+      transports: ["websocket"],
+      auth: {
+        token: token, //SEND TOKEN HERE
+      },
     });
 
     setSocket(newSocket);
@@ -22,6 +27,10 @@ export default function useSocket() {
     newSocket.on("disconnect", () => {
       console.log("Socket disconnected");
       setIsConnected(false);
+    });
+
+    newSocket.on("connect_error", (err) => {
+      console.error("Socket error:", err.message);
     });
 
     return () => {
