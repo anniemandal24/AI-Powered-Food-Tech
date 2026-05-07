@@ -6,6 +6,7 @@ import AIchat from "../pages/chat/AIchat";
 // Import your new inventory pages
 import InventoryPage from "../pages/inventory/InventoryPage"; 
 import AddItem from "../pages/inventory/AddItem"; 
+import ScanFridge from "../pages/scan-fridge/ScanFridge";
 
 export default function AppRoutes() {
   return (
@@ -51,7 +52,7 @@ export default function AppRoutes() {
         path="/scan-fridge"
         element={
           <ProtectedRoute>
-            <AIchat /> 
+            <ScanFridge/> 
           </ProtectedRoute>
         }
       />

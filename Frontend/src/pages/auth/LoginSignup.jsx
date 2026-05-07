@@ -14,6 +14,7 @@ export default function LoginSignup() {
   const location = useLocation();
   const { login } = useAuth();
 
+  //If user was redirected from "Scan Fridge", this will be "/scan-fridge"
   const from = location.state?.from || "/inventory";
 
   const getErrorMessage = (err) => {
@@ -31,11 +32,11 @@ export default function LoginSignup() {
     e.preventDefault();
     try {
       const res = await loginUser({ email, password });
-
-      // ✅ FIX HERE
-      login(res.data);
-
-      navigate(from, { replace: true });
+      
+      if (res.data) {
+        login(res.data); // Pass entire data object to context
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       alert("Login Error: " + getErrorMessage(err));
     }
@@ -45,11 +46,11 @@ export default function LoginSignup() {
     e.preventDefault();
     try {
       const res = await signupUser({ name, email, password });
-
-      // ✅ FIX HERE
-      login(res.data);
-
-      navigate(from, { replace: true });
+      
+      if (res.data) {
+        login(res.data);
+        navigate(from, { replace: true });
+      }
     } catch (err) {
       alert("Signup Error: " + getErrorMessage(err));
     }
@@ -62,18 +63,10 @@ export default function LoginSignup() {
 
       <div className={`login-auth-box ${!isLogin ? "active" : ""}`}>
         <div className="login-form-section">
-          <form
-            className="login-form"
-            onSubmit={isLogin ? handleLogin : handleSignup}
-          >
-            <h2 className="login-form-h2">
-              {isLogin ? "Login" : "Signup"}
-            </h2>
-
+          <form className="login-form" onSubmit={isLogin ? handleLogin : handleSignup}>
+            <h2 className="login-form-h2">{isLogin ? "Login" : "Signup"}</h2>
             <p className="login-form-p">
-              {isLogin
-                ? "Welcome back! Please enter your details."
-                : "Join us today!"}
+              {isLogin ? "Welcome back!" : "Join us today!"}
             </p>
 
             {!isLogin && (
@@ -109,13 +102,8 @@ export default function LoginSignup() {
               {isLogin ? "Login" : "Signup"}
             </button>
 
-            <span
-              className="login-form-span"
-              onClick={() => setIsLogin(!isLogin)}
-            >
-              {isLogin
-                ? "Don't have an account? Create one"
-                : "Already have an account? Login"}
+            <span className="login-form-span" onClick={() => setIsLogin(!isLogin)}>
+              {isLogin ? "Create an account" : "Already have an account? Login"}
             </span>
           </form>
         </div>
@@ -126,11 +114,6 @@ export default function LoginSignup() {
             <h2 className="login-info-section-h2">
               {isLogin ? "Hello, Friend!" : "Welcome Back!"}
             </h2>
-            <p>
-              {isLogin
-                ? "Stop wasting food. Start tracking your fridge today."
-                : "Keep your kitchen organized and your meals fresh."}
-            </p>
           </div>
         </div>
       </div>

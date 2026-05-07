@@ -8,7 +8,6 @@ export default function AIchat() {
   const { socket, isConnected } = useSocket();
   const location = useLocation();
 
-  // 🧠 Data from Scan Page
   const image = location.state?.image;
   const result = location.state?.result;
 
@@ -19,7 +18,6 @@ export default function AIchat() {
 
   const messagesEndRef = useRef(null);
 
-  // Auto scroll
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -28,90 +26,59 @@ export default function AIchat() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  // 🎧 Socket listeners
   useEffect(() => {
     if (!socket) return;
 
-    socket.on("ai_chunk", (data) => {
-      if (data.conversation_id && !conversationId) {
+    // Listen for the final response from your graph.ainvoke
+    socket.on("ai_complete", (data) => {
+      setIsTyping(false);
+
+      if (data.conversation_id) {
         setConversationId(data.conversation_id);
       }
 
-      setMessages((prev) => {
-        const last = prev[prev.length - 1];
-
-        if (last && last.sender === "ai" && last.streaming) {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            ...last,
-            text: last.text + (data.chunk || ""),
-          };
-          return updated;
-        }
-
-        return [
-          ...prev,
-          {
-            id: Date.now(),
-            sender: "ai",
-            text: data.chunk || "",
-            streaming: true,
-          },
-        ];
-      });
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          sender: "ai",
+          text: data.response, // Matches 'response' key from socket_api.py
+          streaming: false,
+        },
+      ]);
     });
 
-    socket.on("ai_complete", () => {
+    socket.on("ai_error", (data) => {
       setIsTyping(false);
-
-      setMessages((prev) => {
-        const updated = [...prev];
-        const last = updated[updated.length - 1];
-
-        if (last?.sender === "ai") {
-          updated[updated.length - 1] = {
-            ...last,
-            streaming: false,
-          };
-        }
-
-        return updated;
-      });
-    });
-
-    socket.on("ai_error", () => {
-      setIsTyping(false);
+      console.error("AI Error:", data.error);
     });
 
     return () => {
-      socket.off("ai_chunk");
       socket.off("ai_complete");
       socket.off("ai_error");
     };
-  }, [socket, conversationId]);
+  }, [socket]);
 
-  // 🚀 AUTO SEND after scan
+  // Auto-send image logic after fridge scan
   useEffect(() => {
     if (!socket || !isConnected || !image) return;
 
     const userMessage = {
       id: Date.now(),
       sender: "user",
-      text: "Here is my fridge image. Suggest recipes.",
+      text: "Scanning fridge image... what can I cook?",
     };
 
     setMessages([userMessage]);
     setIsTyping(true);
 
     socket.emit("ask_ai", {
-      message: "Analyze this fridge and suggest recipes",
-      image,
-      context: result,
+      message: "Analyze this fridge and suggest recipes", // data.get("message")
+      url: image, // Matches data.get("url") in socket_api.py
       conversation_id: conversationId,
     });
-  }, [socket, isConnected]);
+  }, [socket, isConnected, image]);
 
-  // ✉️ Manual send
   const handleSend = (e) => {
     e.preventDefault();
     if (!inputMessage.trim() || !socket || !isConnected) return;
@@ -127,6 +94,7 @@ export default function AIchat() {
 
     socket.emit("ask_ai", {
       message: inputMessage,
+      url: null,
       conversation_id: conversationId,
     });
 
@@ -135,62 +103,48 @@ export default function AIchat() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      {/* Header */}
-      <div className="p-4 border-b flex justify-between bg-white">
-        <h1 className="font-bold text-lg">AI Recipe Assistant</h1>
-        <span className="text-sm">
-          {isConnected ? "🟢 Connected" : "🔴 Offline"}
+      <div className="p-4 border-b flex justify-between bg-white shadow-sm">
+        <h1 className="font-bold text-lg text-green-700">FreshTrack AI Assistant</h1>
+        <span className="text-sm font-medium">
+          {isConnected ? "🟢 System Ready" : "🔴 Reconnecting..."}
         </span>
       </div>
 
-      {/* Chat */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={msg.sender === "user" ? "text-right" : ""}
-          >
+          <div key={msg.id} className={msg.sender === "user" ? "flex justify-end" : "flex justify-start"}>
             <div
-              className={`inline-block px-4 py-2 rounded-xl max-w-[70%] ${
-                msg.sender === "user"
-                  ? "bg-green-500 text-white"
-                  : "bg-white border"
+              className={`inline-block px-4 py-2 rounded-2xl max-w-[80%] shadow-sm ${
+                msg.sender === "user" ? "bg-green-600 text-white" : "bg-white border text-gray-800"
               }`}
             >
-              {msg.sender === "ai" ? (
-                <ReactMarkdown>{msg.text}</ReactMarkdown>
-              ) : (
-                msg.text
-              )}
+              {msg.sender === "ai" ? <ReactMarkdown className="prose prose-sm">{msg.text}</ReactMarkdown> : msg.text}
             </div>
           </div>
         ))}
 
         {isTyping && (
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-gray-500 animate-pulse">
             <Loader2 className="animate-spin" size={16} />
-            AI is thinking...
+            Assistant is processing fridge data...
           </div>
         )}
-
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
       <form onSubmit={handleSend} className="p-4 border-t bg-white flex gap-2">
         <input
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          placeholder="Ask about recipes..."
-          className="flex-1 border rounded px-3 py-2"
+          placeholder="What should I do with my expiring milk?"
+          className="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
-
         <button
           type="submit"
-          disabled={!isConnected}
-          className="bg-green-500 text-white px-4 rounded"
+          disabled={!isConnected || !inputMessage.trim()}
+          className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full disabled:bg-gray-300 transition-colors"
         >
-          <Send size={18} />
+          <Send size={20} />
         </button>
       </form>
     </div>
