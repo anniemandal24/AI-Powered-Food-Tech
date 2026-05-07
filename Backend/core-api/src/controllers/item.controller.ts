@@ -1,6 +1,4 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import type { Request, Response } from "express";
-import { user } from "../models/user.model.js";
 import { item } from "../models/item.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -8,7 +6,7 @@ import mongoose from "mongoose";
 import { uploadOnCloudinary,deleteFromCloudinary } from "../services/cloudinary.js";
 import { Upload } from "../models/upload.model.js"; 
 
-export const addItem=asyncHandler(async(req,res)=>{
+export const addItem = asyncHandler(async(req,res)=>{
     const{name,category,quantity,expiryDate,isEstimatedExpiry,source,cost}=req.body
     if(!name||!expiryDate||!source){
         return new ApiError(400,"name,expirydate and source required")
@@ -16,7 +14,7 @@ export const addItem=asyncHandler(async(req,res)=>{
     if(!["MANUAL","IMAGE","PDF"].includes(source)){
         return new ApiError(400,"source should be manual,image and pdf")
     }
-    const newItem=await item.create({
+    const newItem = await item.create({
         user:req.user._id,
         name,
         category,
@@ -31,21 +29,26 @@ export const addItem=asyncHandler(async(req,res)=>{
     res.status(201).json(new ApiResponse(201,newItem,"Item added"))
 })
 
-export const getAllItem=asyncHandler(async(req,res)=>{
+export const getAllItem = asyncHandler(async(req,res)=>{
     const items=await item.find({user:req.user._id})
     res.status(200).json(new ApiResponse(200,items,"Items fetched"))
 })
 
-export const getItembyStatus=asyncHandler(async(req,res)=>{
+export const getItembyStatus = asyncHandler(async(req,res)=>{
     const {status}=req.params
-    const statustr=status as String
+    const statustr = status as String
     if(!status){
         return new ApiError(404,"status not found")
     }
     if(!["AVAILABLE","CONSUMED","WASTED"].includes(statustr.toUpperCase())){
         return new ApiError(404,"status must be available,consumed or wasted")
     }
-    const items=await item.find({user:req.user._id,status:statustr.toUpperCase()})
+
+    const items = await item.find({
+        user:req.user._id,
+        status:statustr.toUpperCase()
+    })
+
     res.status(200).json(new ApiResponse(200,items,`${status} items fetched successfully`))
 })
 
@@ -107,8 +110,13 @@ export const deleteItem=asyncHandler(async(req,res)=>{
     res.status(200).json(new ApiResponse(200,null,"Item deleted"))
 })
 
-export const getExpiredItems=asyncHandler(async(req,res)=>{
-    const expiredItems=await item.find({user:req.user._id,expiryDate:{$lt:new Date()},status:"AVAILABLE"})
+export const getExpiredItems = asyncHandler(async(req,res)=>{
+    const expiredItems = await item.find({
+        user:req.user._id,
+        expiryDate:{ $lt:new Date() },
+        status:"AVAILABLE"
+    })
+
     res.status(200).json(new ApiResponse(200,expiredItems,"Expired Items fetched"))
 })
 

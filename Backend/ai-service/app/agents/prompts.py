@@ -46,7 +46,6 @@ INTENT_CLASSIFIER_AGENT_PROMPT = f"""
 """
 
 
-
 VISION_AGENT_SYSTEM_PROMPT = """
     You are an expert computer vision and nutrition analysis AI. Your objective is to analyze images of food or food ingredients provided via URL or direct upload and extract specific data about each item present. 
     Pay close attention to visual indicators of freshness, ripeness, or spoilage to accurately assess the condition of the ingredients.
@@ -143,7 +142,8 @@ def get_system_prompt(
 
         OUTPUT FORMAT (STRICT -> PLAIN TEXT):
 
-        Always respond using this structure:
+        <Firsly give a brief introduction about your answer according to user query>
+
         Priority Ingredients (Use First):
 
         item 1

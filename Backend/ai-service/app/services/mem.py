@@ -7,14 +7,15 @@ config = {
         "provider":"gemini",
         "config":{
             "api_key":os.getenv("GEMINI_API_KEY"),
-            "model":"models/gemini-embedding-001"
+            "model":"models/gemini-embedding-002"
         },
     },
+
     "llm":{
         "provider":"gemini",
         "config":{
             "api_key":os.getenv("GEMINI_API_KEY"),
-            "model":"gemini-2.0-flash-001"
+            "model":"gemini-1.5-flash"
         },
     },
 
@@ -30,8 +31,8 @@ config = {
     "vector_store":{
         "provider":"qdrant",
         "config":{
-            "host":"localhost",
-            "port":"6333"
+            "url":os.getenv("QDRANT_URL"),
+            "api_key":os.getenv("QDRANT_API_KEY")
         }
     } 
 }
@@ -73,7 +74,3 @@ async def add_memory(user_id:str, user_query:str, ai_response:str):
     except Exception as e:
         print("Error occured while adding for memory", e)
         return None
-
-
-
-    

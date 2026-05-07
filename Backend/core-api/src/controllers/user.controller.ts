@@ -34,7 +34,7 @@ export const addFamilyMembers = asyncHandler(async (req:Request, res:Response)=>
 })
 
 export const getUserProfile = asyncHandler(async (req:Request, res:Response)=>{
-    const foundUser=await user.findById(req.user._id).select("-passwordHash -refreshToken")
+    const foundUser = await user.findById(req.user._id).select("-passwordHash -refreshToken")
     if(!foundUser){
         return new ApiError(404,"User not found")
 
