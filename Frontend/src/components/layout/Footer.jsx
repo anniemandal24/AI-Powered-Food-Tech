@@ -9,7 +9,7 @@ export default function Footer() {
         <a className="footer-links-a" href="#">Privacy</a>
         <a className="footer-links-a" href="#">Contact</a>
       </div>
-      <div className="footer-copy">© 2026 FreshMind AI · MAKAUT Hackathon</div>
+      <div className="footer-copy">© 2026 FreshMind AI</div>
     </footer>
   );
 }
