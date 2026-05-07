@@ -21,12 +21,6 @@ export const jwtAuthMiddleware = async (req:Request, res:Response, next:NextFunc
 
         const token:string = auth.split(' ')[1]
         const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY as Secret) as IAccessDecodedPayload
-
-        if(!decoded.isActive){
-            return res.status(403).json(
-                new ApiError(403,"Inactive User!")
-            )
-        }
         
         const User = await user.findById(decoded._id).select(
             '-refreshToken -passwordHash'
@@ -41,8 +35,8 @@ export const jwtAuthMiddleware = async (req:Request, res:Response, next:NextFunc
 
     }catch(err){
         console.log(`Error in jwt middleware, Error: ${err}`)
-        res.status(500).json(
-            new ApiError(500,"Internal Server Error for auth middleware")
+        res.status(401).json(
+            new ApiError(401,"Invalid Token")
         )
     }
 }
