@@ -1,0 +1,146 @@
+/* PrivacyPolicy.css */
+
+.privacy-page {
+  width: 100%;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+}
+
+.privacy-container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+/* HEADER */
+.privacy-header {
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.privacy-header h4 {
+  color: green;
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.privacy-header h1 {
+  font-size: 52px;
+  color: #082032;
+  margin-bottom: 15px;
+}
+
+.privacy-header h1 span {
+  color: green;
+}
+
+.privacy-header p {
+  max-width: 900px;
+  margin: auto;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #666;
+}
+
+/* CONTENT */
+.privacy-content {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.privacy-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  background: white;
+  padding: 35px;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.281);
+  transition: 0.3s ease;
+}
+
+.privacy-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.525);
+}
+
+.privacy-icon {
+  width: 55px;
+  height: 55px;
+  background: green;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  flex-shrink: 0;
+  box-shadow: 0 10px 25px rgba(0, 128, 0, 0.3);
+}
+
+.privacy-card h2 {
+  font-size: 24px;
+  color: #082032;
+  margin-bottom: 15px;
+}
+
+.privacy-card p {
+  font-size: 15px;
+  color: #666;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1000px) {
+  .privacy-header h1 {
+    font-size: 55px;
+  }
+
+  .privacy-header p {
+    font-size: 18px;
+  }
+
+  .privacy-card h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .privacy-page {
+    padding: 50px 25px;
+  }
+
+  .privacy-header h1 {
+    font-size: 42px;
+  }
+
+  .privacy-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .privacy-card h2 {
+    font-size: 24px;
+  }
+
+  .privacy-card p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 500px) {
+  .privacy-header h1 {
+    font-size: 34px;
+  }
+
+  .privacy-header p {
+    font-size: 15px;
+  }
+
+  .privacy-icon {
+    width: 65px;
+    height: 65px;
+    font-size: 24px;
+  }
+}
