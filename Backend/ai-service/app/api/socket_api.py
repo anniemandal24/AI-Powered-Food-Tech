@@ -24,26 +24,31 @@ def serialize_mongo(doc):
 
 @sio.on("connect")
 async def connect(sid, environ, auth):
+    print("CONNECT EVENT TRIGGERED")
+
     token = auth.get("token") if auth else None
 
+    print("TOKEN:", token)
+
     if not token:
-        query_string = environ.get("QUERY_STRING", "")
-        parsed_params = urllib.parse.parse_qs(query_string)
-        if "token" in parsed_params:
-            token = parsed_params["token"][0]
-    
+        print("NO TOKEN PROVIDED")
+        raise socketio.exceptions.ConnectionRefusedError("No token")
+
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+
+        print("PAYLOAD:", payload)
+
         await sio.save_session(sid, {
             "user_id": payload.get("_id")
         })
 
         print("Auth-handshake done")
 
-    except Exception:
+    except Exception as e:
+        print("JWT ERROR:", e)
         raise socketio.exceptions.ConnectionRefusedError("Invalid token")
     
-
 @sio.on("fetch_conversations")
 async def fetch_conversations(sid):
     session = await sio.get_session(sid)
