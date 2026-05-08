@@ -17,7 +17,8 @@ export const app:Express = express()
 export const httpServer = createServer(app)
 export const io = new Server(httpServer,{
     cors:{
-        origin:"*"
+        origin:process.env.CORS_ORIGIN,
+        credentials:true
     }
 })
 
