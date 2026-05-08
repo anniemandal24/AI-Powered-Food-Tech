@@ -114,11 +114,16 @@ export default function AIchat() {
         {messages.map((msg) => (
           <div key={msg.id} className={msg.sender === "user" ? "flex justify-end" : "flex justify-start"}>
             <div
-              className={`inline-block px-4 py-2 rounded-2xl max-w-[80%] shadow-sm ${
-                msg.sender === "user" ? "bg-green-600 text-white" : "bg-white border text-gray-800"
-              }`}
+              className={`inline-block px-4 py-2 rounded-2xl max-w-[80%] shadow-sm ${msg.sender === "user" ? "bg-green-600 text-white" : "bg-white border text-gray-800"
+                }`}
             >
-              {msg.sender === "ai" ? <ReactMarkdown className="prose prose-sm">{msg.text}</ReactMarkdown> : msg.text}
+              {msg.sender === "ai" ? (
+                <div className="prose prose-sm">
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
+              ) : (
+                msg.text
+              )}
             </div>
           </div>
         ))}

@@ -11,7 +11,7 @@ export default function useSocket() {
     const token = localStorage.getItem("accessToken"); //GET TOKEN
 
     const newSocket = io(SOCKET_URL, {
-      transports: ["websocket"],
+      transports: ["polling","websocket"],
       auth: {
         token: token, //SEND TOKEN HERE
       },
