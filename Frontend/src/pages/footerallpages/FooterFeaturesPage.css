@@ -1,0 +1,157 @@
+/* FeaturesPage.css */
+
+.features-page {
+    width: 100%;
+    min-height: 100vh;
+    font-family: "Poppins", sans-serif;
+}
+
+.features-container {
+    height: 145vh;
+    max-width: 1500px;
+    margin: 50px;
+}
+
+/* HEADER */
+.features-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.features-header h4 {
+    color: green;
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.features-header h1 {
+    font-size: 52px;
+    color: #082032;
+    line-height: 1.2;
+    margin-bottom: 25px;
+}
+
+.features-header h1 span {
+    color: green;
+}
+
+.features-header p {
+    max-width: 950px;
+    margin: auto;
+    font-size: 15px;
+    color: #666;
+}
+
+/* GRID */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 35px;
+}
+
+/* CARD */
+.feature-card {
+    background: white;
+    padding: 40px 35px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.267);
+    transition: 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature-card::before {
+    content: "";
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 180px;
+    height: 180px;
+    background: rgba(0, 128, 0, 0.08);
+    border-radius: 50%;
+}
+
+.feature-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.497);
+    transform: translateY(-10px);
+}
+
+.feature-icon {
+    width: 65px;
+    height: 65px;
+    background: green;
+    color: white;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 25px rgba(0, 128, 0, 0.25);
+}
+
+.feature-card h2 {
+    font-size: 24px;
+    color: #082032;
+    margin-bottom: 18px;
+}
+
+.feature-card p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #666;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+    .features-header h1 {
+        font-size: 55px;
+    }
+
+    .features-header p {
+        font-size: 18px;
+    }
+
+    .feature-card h2 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .features-page {
+        padding: 50px 25px;
+    }
+
+    .features-header h1 {
+        font-size: 42px;
+    }
+
+    .features-header p {
+        font-size: 16px;
+    }
+
+    .feature-card {
+        padding: 30px;
+    }
+
+    .feature-card h2 {
+        font-size: 24px;
+    }
+
+    .feature-card p {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 500px) {
+    .features-header h1 {
+        font-size: 34px;
+    }
+
+    .feature-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+    }
+}
