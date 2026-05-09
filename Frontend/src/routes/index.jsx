@@ -4,10 +4,10 @@ import LoginSignup from "../pages/auth/LoginSignup";
 import ProtectedRoute from "./ProtectedRoute";
 import AIchat from "../pages/chat/AIchat";
 // Import your new inventory pages
-import InventoryPage from "../pages/inventory/InventoryPage"; 
-import AddItem from "../pages/inventory/AddItem"; 
+import InventoryPage from "../pages/inventory/InventoryPage";
+import AddItem from "../pages/inventory/AddItem";
 import ScanFridge from "../pages/scan-fridge/ScanFridge";
-
+import Analytics from "../pages/analytics/Analytics"
 export default function AppRoutes() {
   return (
     <Routes>
@@ -52,7 +52,15 @@ export default function AppRoutes() {
         path="/scan-fridge"
         element={
           <ProtectedRoute>
-            <ScanFridge/> 
+            <ScanFridge />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <Analytics />
           </ProtectedRoute>
         }
       />

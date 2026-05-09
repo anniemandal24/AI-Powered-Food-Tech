@@ -32,6 +32,7 @@ export default function AuthProvider({ children }) {
     if (token && userData) {
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("accessToken", token);
+      localStorage.setItem("userId", userData._id);
       setUser(userData);
     } else {
       console.error("Login failed: Response missing user or token", data);

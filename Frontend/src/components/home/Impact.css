@@ -95,3 +95,41 @@
     border-radius: 50px;
     transition: width 1s ease;
 }
+.analytics-chart {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.donut-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.donut-box {
+  width: 320px;
+  height: 320px;
+  position: relative;
+}
+
+.waste-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.waste-card {
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.waste-card:hover {
+  transform: translateY(-6px);
+}
