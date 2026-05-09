@@ -165,12 +165,12 @@ section {
 .features-list {
     display: flex;
     flex-direction: column;
+
 }
 .feature-item {
     display: flex;
     gap: 20px;
-    align-items: center;
-    justify-content: center;
+    padding-bottom: 40px;
 }
 .feature-icon-wrap {
     width: 52px;

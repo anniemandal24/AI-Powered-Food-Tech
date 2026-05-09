@@ -9,12 +9,14 @@
     gap: 28px;
 }
 .footer-links-a {
+    cursor: pointer;
     color: rgba(255, 255, 255, 0.4);
     text-decoration: none;
     font-size: 0.85rem;
     transition: color 0.2s;
 }
 .footer-links-a:hover{
+    cursor: pointer;
     color: rgb(90, 255, 90);
 }
 .footer-copy {

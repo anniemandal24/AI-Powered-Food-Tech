@@ -6,7 +6,10 @@ import AIchat from "../pages/chat/AIchat";
 // Import your new inventory pages
 import InventoryPage from "../pages/inventory/InventoryPage"; 
 import AddItem from "../pages/inventory/AddItem"; 
-import ScanFridge from "../pages/scan-fridge/ScanFridge";
+import About from "../pages/footerallpages/About";
+import FooterFeaturesPage from "../pages/footerallpages/FooterFeaturesPage";
+import Privacy from "../pages/footerallpages/Privacy";
+import ContactPage from "../pages/footerallpages/ContactPage";
 
 export default function AppRoutes() {
   return (
@@ -56,6 +59,10 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/freah-mind-ai-about" element={<About />} />
+      <Route path="/freah-mind-ai-features" element={<FooterFeaturesPage />} />
+      <Route path="/freah-mind-ai-privacy" element={<Privacy />} />
+      <Route path="/freah-mind-ai-contact" element={<ContactPage />} />
     </Routes>
   );
 }

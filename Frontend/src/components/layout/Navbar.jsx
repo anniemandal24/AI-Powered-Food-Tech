@@ -1,6 +1,12 @@
-import "./Navbar.css";
-import { useNavigate, Link } from "react-router-dom";
-import useAuth from "../../hooks/auth/useAuth";
+import './Navbar.css';
+import { useState, useEffect } from 'react';
+import HowItWorks from '../home/HowItWorks';
+import Features from '../home/Features';
+import Impact from '../home/Impact';
+import Testimonials from '../home/Testimonials';
+import Hero from '../home/Hero';
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NotificationBell from "../home/notificationBell";
 
 export default function Navbar() {
@@ -21,6 +27,24 @@ export default function Navbar() {
     logout(); // clear context
     navigate("/"); // go to home
   };
+
+  const navigate = useNavigate();
+  const token = localStorage.getItem("accessToken");
+  // 🔐 Handle Scan Button Click (with auth check)
+  const handleScanClick = () => {
+
+    const token = localStorage.getItem("accessToken");
+    if (token && token !== "undefined") {
+      console.log("Auth verified: Navigating to Inventory");
+      navigate("/inventory")
+    }
+    else {
+      console.log("No token found: Redirecting to Login");
+      // Use the 'state' property so the user is sent back here after logging in
+      navigate("/login-signup", { state: { from: "/inventory" } });
+    }
+  };
+
 
   return (
     <nav className="nav">
@@ -67,6 +91,9 @@ export default function Navbar() {
           </button>
         )}
       </div>
+      {!token || token === "undefined" ? (
+        <button className='nav-cat' onClick={handleScanClick}>Get Started Free</button>
+      ) : null}
     </nav>
   );
 }
