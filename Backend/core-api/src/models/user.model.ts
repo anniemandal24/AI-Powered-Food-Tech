@@ -77,8 +77,7 @@ userSchema.pre('save',async function hashPassword(){
 userSchema.methods.generateAccessToken = function () {
     const payload = {
         _id: this._id,
-        fullname: this.fullname,
-        isActive:true
+        fullname: this.fullname
     }
 
     const options: SignOptions = {
