@@ -55,7 +55,7 @@ export default function AppRoutes() {
         path="/scan-fridge"
         element={
           <ProtectedRoute>
-            <AIchat /> 
+            <ScanFridge/> 
           </ProtectedRoute>
         }
       />

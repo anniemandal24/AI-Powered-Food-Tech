@@ -11,14 +11,14 @@ import itemRouter from "./routes/item.routes.js"
 import userRouter from "./routes/user.routes.js"
 import { jwtAuthSocket } from "./middlewares/jwt.middleware.js"
 import { analyticsRouter } from "./routes/analytics.routes.js"
-
 dotenv.config()
 
 export const app:Express = express()
 export const httpServer = createServer(app)
 export const io = new Server(httpServer,{
     cors:{
-        origin:"*"
+        origin:process.env.CORS_ORIGIN,
+        credentials:true
     }
 })
 

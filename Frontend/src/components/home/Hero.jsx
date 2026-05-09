@@ -7,7 +7,7 @@ export default function Hero() {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
 
-  // 🔐 Check login before fetching inventory
+  // 🔐 Fetch inventory ONLY if logged in
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
@@ -30,17 +30,20 @@ export default function Hero() {
     fetchHeroData();
   }, []);
 
-  // 🔐 Navigate with auth check
+  // 🔐 Common navigation handler
   const handleProtectedNavigation = (path) => {
     const token = localStorage.getItem("accessToken");
 
     if (token && token !== "undefined" && token !== "null") {
       navigate(path);
     } else {
-      navigate("/login-signup", { state: { from: path } });
+      navigate("/login-signup", {
+        state: { from: path }, // ✅ important for redirect after login
+      });
     }
   };
 
+  // 📅 Expiry helper
   const getExpiryText = (date) => {
     const diff = new Date(date) - new Date();
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
@@ -54,7 +57,7 @@ export default function Hero() {
       <div className="hero-bg"></div>
       <div className="hero-grid"></div>
 
-      {/* LEFT */}
+      {/* LEFT CONTENT */}
       <div className="hero-content">
         <div className="hero-badge">🌱 Smart Kitchen Assistant</div>
 
@@ -87,7 +90,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* RIGHT (CLICKABLE CARD) */}
+      {/* RIGHT SIDE (CLICKABLE FRIDGE CARD) */}
       <div className="hero-visual">
         <div
           className="fridge-card clickable"
@@ -127,7 +130,10 @@ export default function Hero() {
                 </div>
               ))
             ) : (
-              <div className="fridge-item" style={{ opacity: 0.6 }}>
+              <div
+                className="fridge-item"
+                style={{ justifyContent: "center", opacity: 0.6 }}
+              >
                 No items added yet
               </div>
             )}

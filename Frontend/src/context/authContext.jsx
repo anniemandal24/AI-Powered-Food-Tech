@@ -1,28 +1,41 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-
-  // 🔁 Restore user from localStorage on refresh
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+  // 🛡️ Initialize state immediately and safely to prevent "undefined" crash
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem("user");
+      
+      // Check if it exists and isn't the literal string "undefined"
+      if (savedUser && savedUser !== "undefined") {
+        return JSON.parse(savedUser);
+      }
+    } catch (error) {
+      console.error("Auth initialization error:", error);
+      localStorage.removeItem("user"); // Clean up corrupt data
+      localStorage.removeItem("accessToken");
     }
-  }, []);
+    return null;
+  });
 
-  // ✅ LOGIN
+  // ✅ LOGIN: Handles various backend response shapes
   const login = (data) => {
-    // data = { user, accessToken }
-    const { user, accessToken } = data;
+    console.log("Login Data Received:", data);
 
-    // store both
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("accessToken", accessToken);
+    // Support responses like { data: { user, accessToken } } or { user, accessToken }
+    const authData = data?.data || data;
+    const userData = authData?.user;
+    const token = authData?.accessToken || authData?.token;
 
-    setUser(user);
+    if (token && userData) {
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("accessToken", token);
+      setUser(userData);
+    } else {
+      console.error("Login failed: Response missing user or token", data);
+    }
   };
 
   // ✅ LOGOUT

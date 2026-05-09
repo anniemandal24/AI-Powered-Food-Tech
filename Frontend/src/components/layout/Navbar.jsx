@@ -8,29 +8,25 @@ import Hero from '../home/Hero';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import NotificationBell from "../home/notificationBell";
-
-<Link to="/chat">AI Chat</Link>
+import { useAuth } from "../../hooks/auth"
 
 export default function Navbar() {
-  const handleScroll = () => {
-    const section = document.getElementById("how");
-    section.scrollIntoView({ behavior: "smooth" });
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  // 🔽 Scroll handlers (unchanged)
+  const scrollTo = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
   };
-  const handleScroll2 = () => {
-    const section = document.getElementById("features");
-    section.scrollIntoView({ behavior: "smooth" });
-  };
-  const handleScroll3 = () => {
-    const section = document.getElementById("impact");
-    section.scrollIntoView({ behavior: "smooth" });
-  };
-  const handleScroll4 = () => {
-    const section = document.getElementById("reviews");
-    section.scrollIntoView({ behavior: "smooth" });
-  };
-  const handleScroll0 = () => {
-    const section = document.getElementById("hero");
-    section.scrollIntoView({ behavior: "smooth" });
+
+  // 🔐 Logout handler
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken"); // remove token
+    logout(); // clear context
+    navigate("/"); // go to home
   };
 
   const navigate = useNavigate();
@@ -53,17 +49,48 @@ export default function Navbar() {
 
   return (
     <nav className="nav">
-      <div className="logo">
+      {/* LOGO */}
+      <div className="logo" onClick={() => scrollTo("hero")}>
         <div className="logo-dot"></div>
         FreshMind AI
       </div>
+
+      {/* NAV LINKS */}
       <div className="nav-links">
-        <li><a onClick={handleScroll0}>Home</a></li>
-        <li><a onClick={handleScroll}>How It Works</a></li>
-        <li><a onClick={handleScroll2}>Features</a></li>
-        <li><a onClick={handleScroll3}>Impact</a></li>
-        <li><a onClick={handleScroll4}>Reviews</a></li>
-        <li><NotificationBell /></li>
+        <li><a onClick={() => scrollTo("hero")}>Home</a></li>
+        <li><a onClick={() => scrollTo("how")}>How It Works</a></li>
+        <li><a onClick={() => scrollTo("features")}>Features</a></li>
+        <li><a onClick={() => scrollTo("impact")}>Impact</a></li>
+        <li><a onClick={() => scrollTo("reviews")}>Reviews</a></li>
+
+        {/* ✅ Chat link */}
+        <li>
+          <Link to="/chat">AI Chat</Link>
+        </li>
+
+        <li>
+          <NotificationBell />
+        </li>
+      </div>
+
+      {/* 🔐 RIGHT SIDE */}
+      <div className="nav-actions">
+        {user ? (
+          <>
+            <span className="user-name">Hi, {user.name}</span>
+
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <button
+            className="nav-cat"
+            onClick={() => navigate("/login-signup")}
+          >
+            Get Started Free
+          </button>
+        )}
       </div>
       {!token || token === "undefined" ? (
         <button className='nav-cat' onClick={handleScanClick}>Get Started Free</button>

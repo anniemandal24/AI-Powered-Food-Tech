@@ -33,7 +33,7 @@ async def connect(sid, environ, auth):
             token = parsed_params["token"][0]
     
     try:
-        payload = jwt.decode(token, JWT_SECRET, ["HS256"])
+        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
         await sio.save_session(sid, {
             "user_id": payload.get("_id")
         })
